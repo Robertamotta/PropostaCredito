@@ -19,7 +19,7 @@ public class ClienteController(ILogger<ClienteController> logger, ClienteServico
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, $"Erro ao buscar os bloqueios cadastrados: {ex.Message}");
+            logger.LogError(ex, "Erro ao buscar os bloqueios cadastrados");
             return StatusCode(500, "Ocorreu um erro ao processar a solicitação.");
         }
     }

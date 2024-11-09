@@ -1,9 +1,10 @@
-﻿using Clientes.Dominio.Entidades;
+﻿using Clientes.Dominio;
+using Clientes.Dominio.Entidades;
 using Clientes.Infraestrutura.Interfaces;
 
 namespace Clientes.Aplicacao.Servicos;
 
-public class ClienteServico(IClienteRepositorio clienteRepositorio)
+public class ClienteServico(IClienteRepositorio clienteRepositorio, IMensageria mensageria)
 {
     public async Task<IEnumerable<Cliente>> ListarClientes()
     {
@@ -18,6 +19,7 @@ public class ClienteServico(IClienteRepositorio clienteRepositorio)
     public async Task CadastrarCliente(Cliente cliente)
     {
         await clienteRepositorio.Cadastrar(cliente);
+        await mensageria.EnviarCadastroClienteNovo(cliente);
     }
 
     public async Task AtualizarCliente(Cliente cliente)

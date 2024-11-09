@@ -1,9 +1,11 @@
 ﻿using Clientes.Dominio.Entidades;
 using Clientes.Infraestrutura.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Clientes.Infraestrutura.Dados;
 
+[ExcludeFromCodeCoverage]
 public class ClienteRepositorio(ClientesContext context) : IClienteRepositorio
 {
     public async Task<IEnumerable<Cliente>> Listar() => await context.Clientes.ToListAsync();

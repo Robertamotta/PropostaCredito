@@ -1,21 +1,30 @@
+using Clientes.Api.MassTransitConfig;
 using Clientes.Aplicacao.Servicos;
+using Clientes.Dominio;
 using Clientes.Infraestrutura.Dados;
 using Clientes.Infraestrutura.Interfaces;
+using Clientes.Infraestrutura.Servico;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuração do MySQL
-builder.Services.AddDbContext<ClientesContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("MySqlConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MySqlConnection"))));
+var connectionString = builder.Configuration.GetConnectionString("StringConnectionMySql");
+
+builder.Services.AddDbContext<ClientesContext>(opts =>
+ opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 // Dependency Resolver 
 builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
+builder.Services.AddScoped<IEmissaoCartaoCreditoServico, EmissaoCartaoCreditoServico>();
+builder.Services.AddScoped<IMensageria, Mensageria>();
+builder.Services.AddScoped<IPropostaCreditoServico, PropostaCreditoServico>();
 builder.Services.AddScoped<ClienteServico>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
+builder.Services.ConfigureMasTransit();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
