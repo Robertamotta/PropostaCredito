@@ -44,8 +44,8 @@ public static class MassTransitConfiguration
 
                cfg.Publish<Cliente>(ConfigurePublishEvento);
 
-               ConfigureEndpoint<PropostaCreditoConsumer>(context, cfg, "", prefetchCount: 10);
-               ConfigureEndpoint<EmissaoCartaoCreditoConsumer>(context, cfg, "", prefetchCount: 10);
+               ConfigureEndpoint<PropostaCreditoConsumer>(context, cfg, "queue.propostacredito.v1", prefetchCount: 10);
+               ConfigureEndpoint<EmissaoCartaoCreditoConsumer>(context, cfg, "queue.emissaocartaocredito.v1", prefetchCount: 10);
            });
         });
     }

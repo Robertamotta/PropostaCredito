@@ -5,7 +5,6 @@ using Clientes.Infraestrutura.Dados;
 using Clientes.Infraestrutura.Interfaces;
 using Clientes.Infraestrutura.Servico;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 

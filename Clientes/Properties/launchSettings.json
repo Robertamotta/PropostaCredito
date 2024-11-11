@@ -1,5 +1,4 @@
 ﻿{
-  "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -10,19 +9,23 @@
   },
   "profiles": {
     "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5042",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "RABBITMQ_HOST": "localhost",
+        "RABBITMQ_VHOST": "/",
+        "RABBITMQ_PORT": "5672",
+        "RABBITMQ_USER": "guest",
+        "RABBITMQ_PASSWORD": "guest",
+        "RABBITMQ_USE_SSL": "false",
+        "StringConnectionMySql": "server=localhost;database=clientes;user=root;password=root"
+      }
+    },
+    "ClienteApi": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5001;https://localhost:5002",
       "environmentVariables": {
         "RABBITMQ_HOST": "localhost",
         "RABBITMQ_VHOST": "/",
@@ -30,7 +33,7 @@
         "RABBITMQ_USER": "guest",
         "RABBITMQ_PASSWORD": "guest",
         "RABBITMQ_USE_SSL": "false",
-        "StringConnectionMySql": "server=localhost;database=dce;user=root;password=root"
+        "StringConnectionMySql": "server=localhost;database=clientes;user=root;password=root"
       }
     }
   }
