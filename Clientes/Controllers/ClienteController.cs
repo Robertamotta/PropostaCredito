@@ -1,12 +1,12 @@
-﻿using Clientes.Aplicacao.Servicos;
-using Clientes.Dominio.Entidades;
+﻿using Clientes.Dominio.Entidades;
+using Clientes.Dominio.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clientes.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ClienteController(ILogger<ClienteController> logger, ClienteServico clienteServico) : ControllerBase
+public class ClienteController(ILogger<ClienteController> logger, IClienteServico clienteServico) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> Listar()
@@ -32,11 +32,9 @@ public class ClienteController(ILogger<ClienteController> logger, ClienteServico
             var cliente = await clienteServico.ObterCliente(id);
             if (cliente == null)
             {
-                logger.LogWarning("Cliente com ID {Id} não encontrado", id);
-                return NotFound();
+                return NotFound("Cliente não encontrado");
             }
 
-            logger.LogInformation("Cliente com ID {Id} encontrado", id);
             return Ok(cliente);
         }
         catch (Exception ex)
@@ -59,7 +57,7 @@ public class ClienteController(ILogger<ClienteController> logger, ClienteServico
         catch (Exception ex)
         {
             logger.LogError(ex, "Erro ao cadastrar um novo cliente");
-            return StatusCode(500, "Ocorreu um erro ao processar a solicitação.");
+            return StatusCode(500, $"Ocorreu um erro ao processar a solicitação. {ex.Message}");
         }
     }
 
@@ -79,12 +77,12 @@ public class ClienteController(ILogger<ClienteController> logger, ClienteServico
             await clienteServico.AtualizarCliente(cliente);
             logger.LogInformation("Cliente com ID {Id} atualizado com sucesso", cliente.Id);
 
-            return NoContent();
+            return Ok();
         }
         catch(Exception ex)
         {
             logger.LogError(ex, "Erro ao atualizar cliente com ID {Id}", cliente.Id);
-            return StatusCode(500, "Ocorreu um erro ao processar a solicitação.");
+            return StatusCode(500, $"Ocorreu um erro ao processar a solicitação. {ex.Message}");
         }
     }
 
@@ -96,7 +94,7 @@ public class ClienteController(ILogger<ClienteController> logger, ClienteServico
             await clienteServico.RemoverCliente(id);
             logger.LogInformation("Cliente com ID {id} removido com sucesso", id);
 
-            return NoContent();
+            return Ok();
         }
         catch(Exception ex)
         {

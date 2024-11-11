@@ -1,5 +1,5 @@
-﻿using Clientes.Dominio;
-using Clientes.Dominio.DTOs;
+﻿using Clientes.Dominio.DTOs;
+using Clientes.Dominio.Interfaces;
 using Clientes.Infraestrutura.Interfaces;
 
 namespace Clientes.Aplicacao.Servicos;

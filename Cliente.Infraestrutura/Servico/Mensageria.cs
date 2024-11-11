@@ -1,5 +1,5 @@
-﻿using Clientes.Dominio;
-using Clientes.Dominio.Entidades;
+﻿using Clientes.Dominio.Entidades;
+using Clientes.Dominio.Interfaces;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;

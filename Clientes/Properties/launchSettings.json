@@ -24,7 +24,13 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "RABBITMQ_HOST": "localhost",
+        "RABBITMQ_VHOST": "/",
+        "RABBITMQ_PORT": "5672",
+        "RABBITMQ_USER": "guest",
+        "RABBITMQ_PASSWORD": "guest",
+        "RABBITMQ_USE_SSL": "false",
+        "StringConnectionMySql": "server=localhost;database=dce;user=root;password=root"
       }
     }
   }

@@ -1,7 +1,9 @@
 ﻿using Clientes.Dominio.Entidades;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Clientes.Dominio.DTOs;
 
+[ExcludeFromCodeCoverage]
 public class EmissaoCartaoCredito
 {
     public int Id { get; set; }

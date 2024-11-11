@@ -1,5 +1,8 @@
-﻿namespace Clientes.Dominio.Entidades;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace Clientes.Dominio.Entidades;
+
+[ExcludeFromCodeCoverage]
 public class Cliente
 {
     public int Id { get; set; }

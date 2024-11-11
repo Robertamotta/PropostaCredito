@@ -1,6 +1,6 @@
 using Clientes.Api.MassTransitConfig;
 using Clientes.Aplicacao.Servicos;
-using Clientes.Dominio;
+using Clientes.Dominio.Interfaces;
 using Clientes.Infraestrutura.Dados;
 using Clientes.Infraestrutura.Interfaces;
 using Clientes.Infraestrutura.Servico;
@@ -20,7 +20,7 @@ builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
 builder.Services.AddScoped<IEmissaoCartaoCreditoServico, EmissaoCartaoCreditoServico>();
 builder.Services.AddScoped<IMensageria, Mensageria>();
 builder.Services.AddScoped<IPropostaCreditoServico, PropostaCreditoServico>();
-builder.Services.AddScoped<ClienteServico>();
+builder.Services.AddScoped<IClienteServico, ClienteServico>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();

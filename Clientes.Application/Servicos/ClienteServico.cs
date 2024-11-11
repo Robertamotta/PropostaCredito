@@ -1,10 +1,10 @@
-﻿using Clientes.Dominio;
-using Clientes.Dominio.Entidades;
+﻿using Clientes.Dominio.Entidades;
+using Clientes.Dominio.Interfaces;
 using Clientes.Infraestrutura.Interfaces;
 
 namespace Clientes.Aplicacao.Servicos;
 
-public class ClienteServico(IClienteRepositorio clienteRepositorio, IMensageria mensageria)
+public class ClienteServico(IClienteRepositorio clienteRepositorio, IMensageria mensageria) : IClienteServico
 {
     public async Task<IEnumerable<Cliente>> ListarClientes()
     {

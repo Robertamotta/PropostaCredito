@@ -1,6 +1,6 @@
 ﻿using Clientes.Dominio.DTOs;
 
-namespace Clientes.Dominio;
+namespace Clientes.Dominio.Interfaces;
 
 public interface IPropostaCreditoServico
 {
