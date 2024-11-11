@@ -1,0 +1,40 @@
+﻿{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:32961",
+      "sslPort": 44382
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "RABBITMQ_HOST": "localhost",
+        "RABBITMQ_VHOST": "/",
+        "RABBITMQ_PORT": "5672",
+        "RABBITMQ_USER": "guest",
+        "RABBITMQ_PASSWORD": "guest",
+        "RABBITMQ_USE_SSL": "false",
+        "StringConnectionMySql": "server=localhost;database=clientes;user=root;password=root"
+      }
+    },
+    "ClienteApi": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5002;https://localhost:5003",
+      "environmentVariables": {
+        "RABBITMQ_HOST": "localhost",
+        "RABBITMQ_VHOST": "/",
+        "RABBITMQ_PORT": "5672",
+        "RABBITMQ_USER": "guest",
+        "RABBITMQ_PASSWORD": "guest",
+        "RABBITMQ_USE_SSL": "false",
+        "StringConnectionMySql": "server=localhost;database=clientes;user=root;password=root"
+      }
+    }
+  }
+}
