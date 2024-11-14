@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using RabbitMQ.Client;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PropostaCredito.Dominio.DTOs
 {

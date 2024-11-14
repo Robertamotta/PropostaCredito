@@ -1,21 +1,65 @@
 ﻿using PropostaCredito.Dominio.DTOs;
 using PropostaCredito.Dominio.Interfaces;
 using MassTransit;
+using Newtonsoft.Json;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Text;
 
 namespace PropostaCredito.Api.Consumers;
 
-public class ClienteConsumer(ILogger<ClienteConsumer> logger, IProcessadorClienteServico clienteServico) : IConsumer<Cliente>
+public class ClienteConsumer : BackgroundService
 {
-    public async Task Consume(ConsumeContext<Cliente> context)
+
+    private readonly IConnection _connection;
+    private readonly IModel _channel;
+    private const string Queue = "queue.cadastrocliente.v1";
+    private readonly IProcessadorClienteServico _processadorClienteServico;
+    public ClienteConsumer(ILogger<ClienteConsumer> logger, IProcessadorClienteServico clienteServico, IServiceProvider serviceProvider)
     {
-        try
+        var connectionFactory = new ConnectionFactory
         {
-            await clienteServico.Processar(context.Message);
-        }
-        catch (Exception ex)
+            HostName = "localhost"
+        };
+
+        _connection = connectionFactory.CreateConnection();
+
+        _channel = _connection.CreateModel();
+
+        _channel.QueueDeclare(
+            queue: Queue,
+            durable: false,
+            exclusive: false,
+            autoDelete: false);
+        
+        _processadorClienteServico = clienteServico;
+
+    }
+
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        var consumer = new EventingBasicConsumer(_channel);
+
+        consumer.Received += async (sender, eventArgs) =>
         {
-            logger.LogError($"Ocorreu um erro ao processar solicitacao. {ex.Message}");
-            throw;
-        }
+            var contentArray = eventArgs.Body.ToArray();
+            var contentString = Encoding.UTF8.GetString(contentArray);
+            var cliente = JsonConvert.DeserializeObject<Cliente>(contentString);
+
+            Console.WriteLine($"Teste");
+
+            Complete(cliente).Wait();
+
+            _channel.BasicAck(eventArgs.DeliveryTag, false);
+        };
+
+        _channel.BasicConsume(Queue, false, consumer);
+
+        return Task.CompletedTask;
+    }
+
+    public async Task Complete(Cliente cliente)
+    {
+        await _processadorClienteServico.Processar(cliente);
     }
 }
