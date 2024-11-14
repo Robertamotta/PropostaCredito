@@ -1,9 +1,10 @@
-﻿using PropostaCredito.Dominio.Entidades;
+﻿using PropostaCredito.Dominio.DTOs;
+using PropostaCredito.Dominio.Entidades;
 
 namespace PropostaCredito.Dominio.Interfaces;
 
 public interface IMensageria
 {
-    Task EnviarPropostaCreditoEmissaoCartoes(EmissaoCartaoCredito emissaoCartao);
+    Task EnviarPropostaCreditoEmissaoCartoes(PropostaCreditoDto emissaoCartao);
     Task EnviarPropostaCreditoClientes(ClienteProposta cliente);
 }

@@ -4,34 +4,38 @@ using PropostaCredito.Dominio.Interfaces;
 
 namespace PropostaCredito.Dominio.Servico
 {
-    public class ProcessadorClienteServico(IMensageria mensageria) : IProcessadorClienteServico
+    public class ProcessadorPropostaCreditoClienteServico(IMensageria mensageria) : IProcessadorPropostaCreditoClienteServico
     {
-        public async Task Processar(Cliente cliente)
+        public async Task Processar(ClienteDto cliente)
         {
 
             bool aprovacao = AvaliarCredito(cliente);
-            await EnviarMensagensAsync(cliente, aprovacao);
+
+            await EnviarMensagens(cliente, aprovacao);
         }
 
-        private static bool AvaliarCredito(Cliente cliente)
+        private async Task EnviarMensagens(ClienteDto cliente, bool aprovacao)
         {
-            cliente.AprovacaoCredito = cliente.ScoreCredito > 750;
-            return cliente.AprovacaoCredito;
-        }
+            cliente.AprovacaoCredito = aprovacao;
 
-        private async Task EnviarMensagensAsync(Cliente cliente, bool aprovacao)
-        {
             var clienteProposta = ConverterParaClienteProposta(cliente);
+
             await mensageria.EnviarPropostaCreditoClientes(clienteProposta);
 
             if (aprovacao)
             {
                 var emissaoCartao = ConverterParaEmissaoCartaoCredito(cliente);
+
                 await mensageria.EnviarPropostaCreditoEmissaoCartoes(emissaoCartao);
             }
         }
 
-        private static ClienteProposta ConverterParaClienteProposta(Cliente cliente)
+        private static bool AvaliarCredito(ClienteDto cliente)
+        {
+            return cliente.ScoreCredito > 750;
+        }
+
+        private static ClienteProposta ConverterParaClienteProposta(ClienteDto cliente)
         {
             return new ClienteProposta
             {
@@ -40,12 +44,13 @@ namespace PropostaCredito.Dominio.Servico
             };
         }
 
-        private static EmissaoCartaoCredito ConverterParaEmissaoCartaoCredito(Cliente cliente)
+        private static PropostaCreditoDto ConverterParaEmissaoCartaoCredito(ClienteDto cliente)
         {
-            return new EmissaoCartaoCredito
+            return new PropostaCreditoDto
             {
                 Id = cliente.Id,
                 Renda = cliente.Renda,
+                ScoreCredito = cliente.ScoreCredito,
                 AprovacaoCredito = cliente.AprovacaoCredito
             };
         }

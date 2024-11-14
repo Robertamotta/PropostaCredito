@@ -1,9 +1,11 @@
-﻿namespace PropostaCredito.Dominio.Entidades
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace PropostaCredito.Dominio.Entidades
 {
+    [ExcludeFromCodeCoverage]
     public class EmissaoCartaoCredito
     {
         public int Id { get; set; }
-        public bool AprovacaoCredito { get; set; }
-        public decimal Renda { get; set; }
+        public int QtdCartoesEmitidos { get; set; }
     }
 }

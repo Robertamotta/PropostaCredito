@@ -1,65 +1,70 @@
-﻿using PropostaCredito.Dominio.DTOs;
+﻿using Newtonsoft.Json;
+using PropostaCredito.Dominio.DTOs;
 using PropostaCredito.Dominio.Interfaces;
-using MassTransit;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace PropostaCredito.Api.Consumers;
 
+[ExcludeFromCodeCoverage]
 public class ClienteConsumer : BackgroundService
 {
-
-    private readonly IConnection _connection;
-    private readonly IModel _channel;
+    private readonly IConnection connection;
+    private readonly IModel channel;
+    private readonly IServiceProvider services;
     private const string Queue = "queue.cadastrocliente.v1";
-    private readonly IProcessadorClienteServico _processadorClienteServico;
-    public ClienteConsumer(ILogger<ClienteConsumer> logger, IProcessadorClienteServico clienteServico, IServiceProvider serviceProvider)
+
+    public ClienteConsumer(IServiceProvider services)
     {
         var connectionFactory = new ConnectionFactory
         {
-            HostName = "localhost"
+            HostName = "localhost",
+            AutomaticRecoveryEnabled = true,
+            NetworkRecoveryInterval = TimeSpan.FromSeconds(5)
+            
         };
 
-        _connection = connectionFactory.CreateConnection();
+        connection = connectionFactory.CreateConnection();
 
-        _channel = _connection.CreateModel();
+        channel = connection.CreateModel();
 
-        _channel.QueueDeclare(
+        channel.QueueDeclare(
             queue: Queue,
             durable: false,
             exclusive: false,
             autoDelete: false);
         
-        _processadorClienteServico = clienteServico;
-
+        this.services = services;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var consumer = new EventingBasicConsumer(_channel);
+        var consumer = new EventingBasicConsumer(channel);
 
         consumer.Received += async (sender, eventArgs) =>
         {
             var contentArray = eventArgs.Body.ToArray();
             var contentString = Encoding.UTF8.GetString(contentArray);
-            var cliente = JsonConvert.DeserializeObject<Cliente>(contentString);
+            var cliente = JsonConvert.DeserializeObject<ClienteDto>(contentString);
 
-            Console.WriteLine($"Teste");
+            await Complete(cliente);
 
-            Complete(cliente).Wait();
-
-            _channel.BasicAck(eventArgs.DeliveryTag, false);
+            channel.BasicAck(eventArgs.DeliveryTag, false);
         };
 
-        _channel.BasicConsume(Queue, false, consumer);
+        channel.BasicConsume(Queue, false, consumer);
 
         return Task.CompletedTask;
     }
 
-    public async Task Complete(Cliente cliente)
+    public async Task Complete(ClienteDto cliente)
     {
-        await _processadorClienteServico.Processar(cliente);
+        using var serviceScope = services.CreateScope();
+
+        var processadorClienteServico = serviceScope.ServiceProvider.GetRequiredService<IProcessadorPropostaCreditoClienteServico>();
+
+        await processadorClienteServico.Processar(cliente);
     }
 }
