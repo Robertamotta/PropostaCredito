@@ -8,7 +8,6 @@ namespace PropostaCredito.Dominio.Servico
     {
         public async Task Processar(ClienteDto cliente)
         {
-
             bool aprovacao = AvaliarCredito(cliente);
 
             await EnviarMensagens(cliente, aprovacao);

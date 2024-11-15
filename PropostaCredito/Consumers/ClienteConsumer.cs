@@ -14,9 +14,11 @@ public class ClienteConsumer : BackgroundService
     private readonly IConnection connection;
     private readonly IModel channel;
     private readonly IServiceProvider services;
+    private readonly ILogger<ClienteConsumer> logger;
+
     private const string Queue = "queue.cadastrocliente.v1";
 
-    public ClienteConsumer(IServiceProvider services)
+    public ClienteConsumer(ILogger<ClienteConsumer> logger, IServiceProvider services)
     {
         var connectionFactory = new ConnectionFactory
         {
@@ -35,7 +37,8 @@ public class ClienteConsumer : BackgroundService
             durable: false,
             exclusive: false,
             autoDelete: false);
-        
+
+        this.logger = logger;
         this.services = services;
     }
 
@@ -49,6 +52,11 @@ public class ClienteConsumer : BackgroundService
             var contentString = Encoding.UTF8.GetString(contentArray);
             var cliente = JsonConvert.DeserializeObject<ClienteDto>(contentString);
 
+            if(cliente == null)
+            {
+                logger.LogError("Cliente recebido é nulo ou inválido");
+                return;
+            }
             await Complete(cliente);
 
             channel.BasicAck(eventArgs.DeliveryTag, false);

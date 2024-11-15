@@ -13,7 +13,6 @@ builder.Services.AddHostedService<ClienteConsumer>();
 
 builder.Services.AddControllers();
 
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
